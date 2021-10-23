@@ -30,6 +30,16 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   && mv Galaxy_camera /opt/GALAXY \
   && rm -r GALAXY.tar.gz GALAXY
 
+# Move libraries out of <arch> and plug in cmake package files
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
+  mv /opt/GALAXY/lib/x86_64/* /opt/GALAXY/lib \
+  && rmdir /opt/GALAXY/lib/x86_64; \
+  elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+  mv /opt/GALAXY/lib/armv8/* /opt/GALAXY/lib \
+  && rmdir /opt/GALAXY/lib/armv8; \
+  else exit 1; fi \
+  && mv GALAXYConfig.cmake GALAXYConfigVersion.cmake /opt/GALAXY
+
 # Update ldconfig
 RUN echo "/opt/GALAXY/lib" >> /etc/ld.so.conf.d/GALAXY.conf \
   && ldconfig
