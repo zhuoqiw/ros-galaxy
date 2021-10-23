@@ -27,7 +27,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   && mkdir GALAXY \
   && tar -xzf GALAXY.tar.gz --strip-components=1 -C GALAXY \
   && (printf "\nY\nEn\n" && cat) | GALAXY/Galaxy_camera.run \
-  && mv GALAXY/Galaxy_camera GALAXYConfig.cmake GALAXYConfigVersion.cmake /opt/GALAXY \
+  && mv GALAXY/Galaxy_camera /opt/GALAXY \
   && rm -r GALAXY.tar.gz GALAXY
 
 # Update ldconfig
