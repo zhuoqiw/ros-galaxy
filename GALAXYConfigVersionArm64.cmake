@@ -1,4 +1,4 @@
-set(PACKAGE_VERSION 1)
+set(PACKAGE_VERSION 1.3.2107)
 
 # Check whether the requested PACKAGE_FIND_VERSION is compatible
 if("${PACKAGE_VERSION}" VERSION_LESS "${PACKAGE_FIND_VERSION}")

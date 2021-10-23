@@ -11,7 +11,7 @@ ARG GALAXY_AMD=https://github.com/zhuoqiw/ros-galaxy/releases/download/v2107/Gal
 ARG GALAXY_ARM=https://github.com/zhuoqiw/ros-galaxy/releases/download/v2107/Galaxy_Linux-armhf_Gige-U3_32bits-64bits_1.3.2107.9261.tar.gz
 
 # Copy cmake package files
-COPY GALAXYConfig.cmake GALAXYConfigVersion.cmake .
+COPY GALAXYConfig*.cmake .
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -33,12 +33,15 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
 # Move libraries out of <arch> and plug in cmake package files
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   mv /opt/GALAXY/lib/x86_64/* /opt/GALAXY/lib \
+  && mv GALAXYConfigVersionAmd64.cmake /opt/GALAXY/GALAXYConfigVersion.cmake \
   && rmdir /opt/GALAXY/lib/x86_64; \
   elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
   mv /opt/GALAXY/lib/armv8/* /opt/GALAXY/lib \
+  && mv GALAXYConfigVersionArm64.cmake /opt/GALAXY/GALAXYConfigVersion.cmake \
   && rmdir /opt/GALAXY/lib/armv8; \
   else exit 1; fi \
-  && mv GALAXYConfig.cmake GALAXYConfigVersion.cmake /opt/GALAXY
+  && mv GALAXYConfig.cmake /opt/GALAXY \
+  && rm GALAXYConfig*.cmake
 
 # Update ldconfig
 RUN echo "/opt/GALAXY/lib" >> /etc/ld.so.conf.d/GALAXY.conf \
