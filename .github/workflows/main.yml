@@ -1,12 +1,7 @@
 name: ci
 
 # Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: workflow_dispatch
 
 defaults:
   run:
@@ -14,27 +9,8 @@ defaults:
 
 jobs:
   job1:
-    name: Check Dockerfile
-    runs-on: ubuntu-latest
-    outputs:
-      any_changed: ${{ steps.changed.outputs.any_changed }}
-    steps:
-      -
-        name: Check out repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      -
-        name: Get specific changed files
-        id: changed
-        uses: tj-actions/changed-files@v9
-        with:
-          files: Dockerfile
-  job2:
     name: Build image
-    needs: job1
     runs-on: ubuntu-latest
-    if: needs.job1.outputs.any_changed
     steps:
       -
         name: Set up QEMU

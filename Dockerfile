@@ -11,7 +11,7 @@ ARG GALAXY_AMD=https://github.com/zhuoqiw/ros-galaxy/releases/download/v2107/Gal
 ARG GALAXY_ARM=https://github.com/zhuoqiw/ros-galaxy/releases/download/v2107/Galaxy_Linux-armhf_Gige-U3_32bits-64bits_1.3.2107.9261.tar.gz
 
 # Copy cmake package files
-COPY GALAXYConfig*.cmake .
+COPY GALAXYConfig*.cmake ./
 
 # Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -25,7 +25,7 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   wget -O GALAXY.tar.gz ${GALAXY_ARM} --no-check-certificate; \
   else exit 1; fi \
   && mkdir GALAXY \
-  && tar -xzf GALAXY.tar.gz --strip-components=1 -C GALAXY \
+  && tar -xzf GALAXY.tar.gz --strip-components=1 --directory=GALAXY \
   && (printf "\nY\nEn\n" && cat) | GALAXY/Galaxy_camera.run \
   && mv Galaxy_camera /opt/GALAXY \
   && rm -r GALAXY.tar.gz GALAXY
