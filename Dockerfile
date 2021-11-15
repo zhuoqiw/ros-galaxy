@@ -30,19 +30,15 @@ RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
   && mv Galaxy_camera /opt/GALAXY \
   && rm -r GALAXY.tar.gz GALAXY
 
-# Move libraries out of <arch> and plug in cmake package files
+# Plug in cmake package files and update ldconfig
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then \
-  mv /opt/GALAXY/lib/x86_64/* /opt/GALAXY/lib \
+  mv GALAXYConfigAmd64.cmake /opt/GALAXY/GALAXYConfig.cmake \
   && mv GALAXYConfigVersionAmd64.cmake /opt/GALAXY/GALAXYConfigVersion.cmake \
-  && rmdir /opt/GALAXY/lib/x86_64; \
+  && echo "/opt/GALAXY/lib/x86_64" >> /etc/ld.so.conf.d/GALAXY.conf; \
   elif [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
-  mv /opt/GALAXY/lib/armv8/* /opt/GALAXY/lib \
+  mv GALAXYConfigArm64.cmake /opt/GALAXY/GALAXYConfig.cmake \
   && mv GALAXYConfigVersionArm64.cmake /opt/GALAXY/GALAXYConfigVersion.cmake \
-  && rmdir /opt/GALAXY/lib/armv8; \
+  && echo "/opt/GALAXY/lib/armv8" >> /etc/ld.so.conf.d/GALAXY.conf; \
   else exit 1; fi \
-  && mv GALAXYConfig.cmake /opt/GALAXY \
+  && ldconfig \
   && rm GALAXYConfig*.cmake
-
-# Update ldconfig
-RUN echo "/opt/GALAXY/lib" >> /etc/ld.so.conf.d/GALAXY.conf \
-  && ldconfig
